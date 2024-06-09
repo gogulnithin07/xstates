@@ -9,31 +9,47 @@ function Comp(){
     const [city,setCity]=useState("");
 useEffect(()=>{
     async function getState(){
+        try{
         const req=await fetch("https://crio-location-selector.onrender.com/countries");
+    if(!req.ok){
+        throw new Error(`HTTP error! status: ${req.status}`);
+    }
         const res=await req.json();
         console.log(res)
         setCountryList((c)=>[...res])
+    }catch(error){
+        console.log(error);
     }
-    getState()
+}
+    getState();
 },[])
 useEffect(()=>{
 
     async function getState(){
+        try{
         const req=await fetch(`https://crio-location-selector.onrender.com/country=${country}/states`);
         const res=await req.json();
         console.log(res)
         setStateList((c)=>[...res])
         setCity("")
         setState("");
+        }catch(error){
+            console.log(error)
+        }
+
     }
     getState()
 },[country])
 useEffect(()=>{
     async function getState(){
+        try{
         const req=await fetch(`https://crio-location-selector.onrender.com/country=${country}/state=${state}/cities`);
         const res=await req.json();
         console.log(res)
         setCityList((c)=>[...res])
+        }catch(error){
+            console.log(error)
+        }
     }
     getState()
 },[state])
@@ -67,7 +83,7 @@ useEffect(()=>{
                 return <option value={val}>{val}</option>
             })}
         </select>
-        {city&&<h2>you selected{city},{state},{country}</h2>}
+        {city&&<h2>You selected {city}, {state}, {country}</h2>}
     </div>
 }
 export {Comp}
